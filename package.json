@@ -1,0 +1,28 @@
+{
+  "name": "memfold-monorepo",
+  "version": "0.0.0",
+  "private": true,
+  "description": "One common memory for every AI coding tool and agent framework.",
+  "type": "module",
+  "packageManager": "pnpm@11.25.0",
+  "engines": {
+    "node": ">=20.10.0"
+  },
+  "scripts": {
+    "build": "pnpm -r --filter \"./packages/**\" build",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc -b --pretty",
+    "lint": "biome check .",
+    "format": "biome format --write .",
+    "clean": "pnpm -r exec rm -rf dist .tsbuildinfo"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.4",
+    "@types/node": "^22.10.0",
+    "tsup": "^8.3.5",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  },
+  "license": "SEE LICENSE IN LICENSE"
+}

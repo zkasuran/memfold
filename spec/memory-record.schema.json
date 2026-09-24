@@ -1,0 +1,156 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://memfold.dev/schema/memory-record.v1.json",
+  "title": "Memfold Memory Record",
+  "description": "The canonical, tool-neutral unit of memory. One record = one durable fact, preference, decision, or episode. Serialized on disk as YAML frontmatter + markdown body; mirrored into SQLite for query.",
+  "type": "object",
+  "required": [
+    "id",
+    "rev",
+    "schema_version",
+    "type",
+    "scope",
+    "body",
+    "created_at",
+    "updated_at",
+    "status",
+    "hlc"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "id": { "type": "string", "description": "Stable identity across versions (ULID)." },
+    "rev": { "type": "string", "description": "This version's id (ULID)." },
+    "schema_version": { "type": "integer", "const": 1 },
+    "type": {
+      "type": "string",
+      "enum": ["fact", "preference", "decision", "convention", "episodic", "task", "entity"],
+      "description": "Memory kind. 'convention'/'preference'/'fact'/'decision' compile to rules files; 'episodic'/'task' are recall-only by default."
+    },
+    "scope": { "type": "string", "enum": ["global", "project", "dir", "session"] },
+    "scope_path": {
+      "type": ["string", "null"],
+      "description": "Repo or directory path the scope binds to (null for global)."
+    },
+    "title": { "type": ["string", "null"], "description": "Short human label." },
+    "body": {
+      "type": "string",
+      "description": "Content (markdown). Feeds full-text and the embedder."
+    },
+    "summary": {
+      "type": ["string", "null"],
+      "description": "One-line form emitted into compiled rules files."
+    },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string" },
+      "default": [],
+      "description": "OR-set (CRDT-mergeable)."
+    },
+    "dedup_key": {
+      "type": ["string", "null"],
+      "description": "Normalized natural key, e.g. 'pref:indent-style'."
+    },
+    "content_hash": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "description": "Body hash for dedup and version identity."
+    },
+    "embedding_model": {
+      "type": ["string", "null"],
+      "description": "e.g. 'all-MiniLM-L6-v2'. Enables re-embed on migration."
+    },
+    "embedding_dim": { "type": ["integer", "null"], "description": "e.g. 384 or 768." },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source"],
+      "properties": {
+        "source": {
+          "type": "string",
+          "enum": ["user", "agent", "tool", "import", "consolidation"]
+        },
+        "tool": {
+          "type": ["string", "null"],
+          "description": "Originating tool, e.g. 'claude-code', 'cursor'."
+        },
+        "session_id": { "type": ["string", "null"] },
+        "author": { "type": ["string", "null"] },
+        "model": { "type": ["string", "null"] },
+        "cite": { "type": ["string", "null"], "description": "Source URL or citation key." }
+      }
+    },
+    "salience": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "default": 0.5,
+      "description": "Importance weight for retrieval ranking."
+    },
+    "confidence": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "default": 1,
+      "description": "Trust in the fact."
+    },
+    "decay": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "half_life_days": {
+          "type": ["number", "null"],
+          "description": "Recency weighting; null = no decay."
+        },
+        "ttl_at": {
+          "type": ["string", "null"],
+          "format": "date-time",
+          "description": "Hard expiry."
+        },
+        "pinned": {
+          "type": "boolean",
+          "default": false,
+          "description": "Opt out of decay and consolidation pruning."
+        }
+      }
+    },
+    "created_at": { "type": "string", "format": "date-time" },
+    "updated_at": { "type": "string", "format": "date-time" },
+    "last_accessed_at": { "type": ["string", "null"], "format": "date-time" },
+    "access_count": { "type": "integer", "minimum": 0, "default": 0 },
+    "supersedes": { "type": ["string", "null"], "description": "id of the version this replaces." },
+    "superseded_by": { "type": ["string", "null"] },
+    "status": {
+      "type": "string",
+      "enum": ["active", "archived", "tombstone"],
+      "default": "active"
+    },
+    "links": {
+      "type": "array",
+      "items": { "type": "string" },
+      "default": [],
+      "description": "Related record ids (OR-set)."
+    },
+    "hlc": {
+      "type": "string",
+      "description": "Hybrid logical clock 'wallMs:counter:nodeId' for last-writer-wins merge."
+    },
+    "sensitivity": {
+      "type": "string",
+      "enum": ["public", "internal", "redacted"],
+      "default": "public"
+    },
+    "redactions": {
+      "type": "array",
+      "default": [],
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["span", "kind"],
+        "properties": {
+          "span": { "type": "array", "items": { "type": "integer" }, "minItems": 2, "maxItems": 2 },
+          "kind": { "type": "string" }
+        }
+      }
+    }
+  }
+}

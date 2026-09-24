@@ -1,0 +1,16 @@
+node_modules/
+dist/
+*.tsbuildinfo
+.DS_Store
+*.log
+coverage/
+.turbo/
+*.db
+*.db-*
+.venv/
+__pycache__/
+target/
+.env
+.env.*
+models/
+.memfold-cache/

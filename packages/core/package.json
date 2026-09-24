@@ -1,0 +1,31 @@
+{
+  "name": "@memfold/core",
+  "version": "0.1.0",
+  "description": "Memfold core: canonical memory-record model, local SQLite store (FTS5 + sqlite-vec), hybrid retrieval, HLC merge, and a pre-write secret gate.",
+  "type": "module",
+  "license": "Apache-2.0",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" }
+  },
+  "files": ["dist", "README.md"],
+  "scripts": {
+    "build": "tsup src/index.ts --format esm --dts --clean",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "better-sqlite3": "^13.0.3",
+    "gray-matter": "^4.0.3",
+    "sqlite-vec": "^0.1.9",
+    "ulidx": "^2.4.1",
+    "yaml": "^2.6.1",
+    "zod": "^3.24.1"
+  },
+  "optionalDependencies": {},
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.12"
+  },
+  "engines": { "node": ">=20.10.0" }
+}
