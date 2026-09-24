@@ -1,0 +1,20 @@
+{
+  "name": "@memfold/sdk",
+  "version": "0.1.0",
+  "description": "Memfold TypeScript SDK: embed the memory store in-process or talk to a memfold daemon, plus drop-in adapters for agent frameworks.",
+  "type": "module",
+  "license": "Apache-2.0",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": { ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" } },
+  "files": ["dist", "README.md"],
+  "scripts": {
+    "build": "tsup src/index.ts --format esm --dts --clean",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@memfold/core": "workspace:*",
+    "zod": "^3.24.1"
+  },
+  "engines": { "node": ">=20.10.0" }
+}

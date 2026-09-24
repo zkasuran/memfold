@@ -1,0 +1,14 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@memfold/core": ["../core/src/index.ts"],
+      "@memfold/adapters": ["../adapters/src/index.ts"],
+      "@memfold/daemon": ["../daemon/src/index.ts"],
+      "@memfold/mcp": ["../mcp/src/index.ts"],
+      "@memfold/sdk": ["../sdk/src/index.ts"]
+    }
+  },
+  "include": ["src/**/*.ts", "test/**/*.ts"]
+}

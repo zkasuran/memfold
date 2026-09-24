@@ -1,0 +1,22 @@
+{
+  "name": "memfold",
+  "version": "0.1.0",
+  "description": "One common memory for every AI coding tool and agent framework. Capture, compile, and sync rules and memory across Claude Code, Cursor, Copilot, Codex, Gemini, Cline and more.",
+  "type": "module",
+  "license": "FSL-1.1-ALv2",
+  "bin": { "memfold": "./dist/cli.js" },
+  "files": ["dist", "README.md", "LICENSE"],
+  "scripts": {
+    "build": "tsup src/cli.ts --format esm --clean",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@memfold/adapters": "workspace:*",
+    "@memfold/core": "workspace:*",
+    "@memfold/daemon": "workspace:*",
+    "@memfold/mcp": "workspace:*",
+    "commander": "^12.1.0",
+    "picocolors": "^1.1.1"
+  },
+  "engines": { "node": ">=20.10.0" }
+}
