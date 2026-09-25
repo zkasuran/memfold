@@ -189,11 +189,12 @@ Use `--global` on `init`, `add` and friends to target `~/.memfold` instead of th
 
 ## Supported tools
 
-`compile` and `import` cover eight tools today. Each writes the file the tool actually reads:
+`compile` and `import` cover nine adapters today. Each writes the file the tool actually reads:
 
 | Tool | File(s) written |
 | --- | --- |
-| AGENTS.md convention | `AGENTS.md` |
+| AGENTS.md (Codex, Amp, opencode, Jules, Warp, Goose) | `AGENTS.md` |
+| Codex (user-global) | `~/.codex/AGENTS.md` |
 | Claude Code | `CLAUDE.md` |
 | Cursor | `.cursor/rules/memfold.mdc` |
 | Windsurf | `.windsurf/rules/memfold.md` |

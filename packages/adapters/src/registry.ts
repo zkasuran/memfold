@@ -3,6 +3,7 @@ import { agentsMdAdapter } from './adapters/agents-md'
 import { aiderAdapter } from './adapters/aider'
 import { claudeAdapter } from './adapters/claude'
 import { clineAdapter } from './adapters/cline'
+import { codexAdapter } from './adapters/codex'
 import { copilotAdapter } from './adapters/copilot'
 import { cursorAdapter } from './adapters/cursor'
 import { geminiAdapter } from './adapters/gemini'
@@ -12,6 +13,7 @@ import type { Adapter } from './types'
 /** Every adapter memfold knows how to read and compile. */
 export const ALL_ADAPTERS: Adapter[] = [
   agentsMdAdapter,
+  codexAdapter,
   claudeAdapter,
   cursorAdapter,
   windsurfAdapter,
