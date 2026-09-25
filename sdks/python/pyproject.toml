@@ -1,0 +1,39 @@
+# SPDX-License-Identifier: Apache-2.0
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "memfold"
+version = "0.1.0"
+description = "Python client and framework adapters for the memfold universal memory daemon."
+readme = "README.md"
+requires-python = ">=3.10"
+license = "Apache-2.0"
+authors = [{ name = "memfold" }]
+keywords = ["memory", "agents", "llm", "langgraph", "crewai", "adk"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "License :: OSI Approved :: Apache Software License",
+  "Intended Audience :: Developers",
+  "Topic :: Software Development :: Libraries",
+]
+dependencies = ["httpx>=0.27"]
+
+[project.optional-dependencies]
+langgraph = ["langgraph>=0.2"]
+llama-index = ["llama-index-core>=0.11"]
+crewai = ["crewai>=0.80"]
+adk = ["google-adk>=1.0"]
+dev = ["pytest>=8.0", "respx>=0.21", "httpx>=0.27"]
+
+[project.urls]
+Homepage = "https://memfold.dev"
+Source = "https://github.com/memfold/memfold"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/memfold"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
