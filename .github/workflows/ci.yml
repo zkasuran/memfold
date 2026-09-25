@@ -1,0 +1,91 @@
+# CI for memfold. Builds the TypeScript workspace on every push and pull request,
+# then runs the language SDK jobs guarded so a missing SDK directory does not fail.
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: build (typecheck, test, lint)
+    runs-on: ubuntu-latest
+    env:
+      CI: 'true'
+    steps:
+      - uses: actions/checkout@v4
+
+      # pnpm/action-setup reads the packageManager field in package.json, so no version input.
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      # The workspace approves the native builds it needs (better-sqlite3) in pnpm-workspace.yaml.
+      - name: Install
+        run: pnpm install
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Test
+        run: pnpm test
+
+      - name: Lint
+        run: pnpm lint
+
+  sdk-python:
+    name: sdk python (uv)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - name: Test the Python SDK when present
+        run: |
+          if [ -f sdks/python/pyproject.toml ]; then
+            cd sdks/python
+            uv sync --all-extras --dev
+            uv run pytest
+          else
+            echo "sdks/python has no pyproject.toml yet, skipping"
+          fi
+
+  sdk-go:
+    name: sdk go
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.22'
+      - name: Build, vet and test the Go SDK when present
+        run: |
+          if [ -f sdks/go/go.mod ]; then
+            cd sdks/go
+            go build ./...
+            go vet ./...
+            go test ./...
+          else
+            echo "sdks/go has no go.mod yet, skipping"
+          fi
+
+  sdk-rust:
+    name: sdk rust
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Build and test the Rust SDK when present
+        run: |
+          if [ -f sdks/rust/Cargo.toml ]; then
+            cd sdks/rust
+            cargo build
+            cargo test
+          else
+            echo "sdks/rust has no Cargo.toml yet, skipping"
+          fi

@@ -1,0 +1,404 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>memfold — one memory for every AI coding tool</title>
+<meta name="description" content="memfold keeps rules and memory in one canonical, versioned, local-first store and compiles it out to every AI coding tool, serves it over MCP and syncs it through a local daemon." />
+<!-- Set the theme before any paint so there is no flash of the wrong theme. -->
+<script>(function(){try{var t=localStorage.getItem('theme')||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+<style>
+:root[data-theme="light"]{--bg:#ffffff;--ink:#0b0e14;--muted:#5b6673;--panel:#f6f8fa;--panel2:#eef1f6;--edge:#e5e9f0;--acc:#2563eb;--acc-ink:#ffffff;--shadow:0 1px 2px rgba(11,14,20,.06),0 8px 24px rgba(11,14,20,.06);}
+:root[data-theme="dark"]{--bg:#0b0e14;--ink:#e6edf3;--muted:#8b98a9;--panel:#141925;--panel2:#1b2130;--edge:#232b3a;--acc:#4a9fe0;--acc-ink:#08131f;--shadow:0 1px 2px rgba(0,0,0,.4),0 10px 30px rgba(0,0,0,.45);}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;scroll-padding-top:80px;}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Inter,Arial,sans-serif;font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;}
+h1,h2,h3{line-height:1.15;letter-spacing:-.01em;margin:0;}
+h1{font-size:clamp(30px,5vw,44px);font-weight:700;}
+h2{font-size:clamp(22px,3vw,28px);font-weight:650;}
+h3{font-size:16px;font-weight:650;}
+p{margin:0;color:var(--muted);}
+a{color:var(--acc);text-decoration:none;}
+a:hover{text-decoration:underline;}
+code,pre{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;}
+.wrap{max-width:1200px;margin:0 auto;padding:0 24px;}
+.num{color:var(--ink);font-weight:700;}
+/* header */
+.hdr{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--bg) 90%,transparent);backdrop-filter:saturate(1.3) blur(10px);border-bottom:1px solid var(--edge);}
+.nav{display:flex;align-items:center;gap:18px;height:64px;}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;color:var(--ink);font-size:17px;}
+.brand .dot{width:22px;height:22px;border-radius:7px;background:var(--acc);display:inline-block;box-shadow:var(--shadow);}
+.menu{display:flex;align-items:center;gap:4px;margin-left:8px;list-style:none;padding:0;}
+.menu>li{position:relative;}
+.menu>li>button{font:inherit;color:var(--ink);background:none;border:0;padding:8px 12px;border-radius:8px;cursor:pointer;display:flex;align-items:center;gap:6px;}
+.menu>li>button:hover,.menu>li>button:focus-visible{background:var(--panel);}
+.menu>li>button .caret{border:solid var(--muted);border-width:0 1.6px 1.6px 0;display:inline-block;padding:2.5px;transform:rotate(45deg);transition:transform .18s ease;}
+.menu>li:hover>button .caret,.menu>li.open>button .caret{transform:rotate(-135deg);}
+.submenu{position:absolute;top:calc(100% + 8px);left:0;min-width:260px;background:var(--bg);border:1px solid var(--edge);border-radius:12px;box-shadow:var(--shadow);padding:8px;opacity:0;visibility:hidden;transform:translateY(-4px);transition:opacity .16s ease,transform .16s ease,visibility .16s;}
+.menu>li:hover>.submenu,.menu>li:focus-within>.submenu,.menu>li.open>.submenu{opacity:1;visibility:visible;transform:translateY(0);}
+.submenu a{display:block;padding:9px 10px;border-radius:8px;color:var(--ink);}
+.submenu a:hover{background:var(--panel);text-decoration:none;}
+.submenu a span{display:block;color:var(--muted);font-size:12.5px;}
+.spacer{flex:1;}
+.icon-btn{font:inherit;background:var(--panel);color:var(--ink);border:1px solid var(--edge);border-radius:9px;width:40px;height:38px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;}
+.icon-btn:hover{background:var(--panel2);}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font:inherit;font-weight:600;padding:10px 16px;border-radius:10px;border:1px solid var(--edge);background:var(--panel);color:var(--ink);cursor:pointer;}
+.btn:hover{background:var(--panel2);text-decoration:none;}
+.btn.primary{background:var(--acc);color:var(--acc-ink);border-color:transparent;}
+.btn.primary:hover{filter:brightness(1.05);}
+.nav .btn{padding:8px 14px;}
+@media (max-width:840px){.menu{display:none;}}
+</style>
+<style>
+section{padding:48px 0;border-top:1px solid var(--edge);}
+section:first-of-type{border-top:0;}
+section h2+.lede{margin-top:8px;max-width:64ch;}
+.eyebrow{color:var(--acc);font-weight:650;font-size:13px;letter-spacing:.04em;text-transform:uppercase;}
+/* hero */
+.hero{display:grid;grid-template-columns:1.05fr .95fr;gap:40px;align-items:center;padding:56px 0 52px;}
+.hero .sub{margin-top:14px;font-size:18px;max-width:52ch;}
+.hero .cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px;}
+.hero .note{margin-top:16px;font-size:13.5px;}
+.tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:22px;}
+.tag{font-size:12.5px;color:var(--muted);background:var(--panel);border:1px solid var(--edge);border-radius:999px;padding:5px 11px;}
+.tag b{color:var(--ink);}
+/* product diagram */
+.diagram{background:var(--panel);border:1px solid var(--edge);border-radius:16px;padding:22px;box-shadow:var(--shadow);}
+.record{background:var(--bg);border:1px solid var(--edge);border-radius:12px;padding:14px 16px;}
+.record .rh{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--muted);margin-bottom:8px;}
+.record .rh .pill{background:var(--acc);color:var(--acc-ink);border-radius:6px;padding:2px 8px;font-weight:650;font-size:11.5px;}
+.record .body{color:var(--ink);font-size:13.5px;font-family:ui-monospace,monospace;line-height:1.5;}
+.fan{display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:22px;margin:10px 0 4px;}
+.files{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.file{display:flex;align-items:center;gap:8px;background:var(--bg);border:1px solid var(--edge);border-radius:9px;padding:9px 11px;font-family:ui-monospace,monospace;font-size:12.5px;color:var(--ink);}
+.file .g{width:8px;height:8px;border-radius:50%;background:var(--acc);flex:none;}
+/* grids + cards */
+.grid{display:grid;gap:18px;margin-top:26px;}
+.g3{grid-template-columns:repeat(3,1fr);}
+.g2{grid-template-columns:repeat(2,1fr);}
+.card{background:var(--panel);border:1px solid var(--edge);border-radius:14px;padding:20px;}
+.card h3{margin-bottom:6px;}
+.card p{font-size:14.5px;}
+.card .k{font-size:12.5px;color:var(--acc);font-weight:650;margin-bottom:10px;letter-spacing:.03em;text-transform:uppercase;}
+.card ul{margin:10px 0 0;padding-left:18px;color:var(--muted);font-size:14px;}
+.card li{margin:4px 0;}
+/* code */
+pre.code{background:var(--panel);border:1px solid var(--edge);border-radius:12px;padding:16px;overflow:auto;font-size:13px;line-height:1.5;color:var(--ink);margin:0;}
+pre.code .c{color:var(--muted);}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:26px;align-items:start;}
+/* table */
+.tbl{width:100%;border-collapse:collapse;margin-top:22px;font-size:14px;}
+.tbl th,.tbl td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--edge);}
+.tbl th{color:var(--muted);font-weight:600;font-size:12.5px;text-transform:uppercase;letter-spacing:.03em;}
+.tbl td code{background:var(--panel);border:1px solid var(--edge);border-radius:6px;padding:1px 6px;font-size:12.5px;}
+.lic{display:inline-block;font-size:12px;font-weight:650;border-radius:6px;padding:2px 8px;border:1px solid var(--edge);}
+.lic.a{color:var(--acc);}
+/* cta band */
+.band{background:var(--panel);border:1px solid var(--edge);border-radius:18px;padding:34px;text-align:center;box-shadow:var(--shadow);}
+.band .cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:20px;}
+/* footer */
+footer{border-top:1px solid var(--edge);padding:30px 0 48px;}
+.fcols{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:24px;}
+.fcols h4{margin:0 0 10px;font-size:12.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;}
+.fcols a{display:block;color:var(--ink);font-size:14px;padding:3px 0;}
+.fnote{margin-top:26px;font-size:13px;color:var(--muted);}
+@media (max-width:840px){.hero{grid-template-columns:1fr;padding:32px 0;}.g3,.g2,.two,.fcols{grid-template-columns:1fr;}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important;}}
+</style>
+</head>
+<body>
+<header class="hdr">
+  <div class="wrap nav">
+    <a class="brand" href="#top"><span class="dot" aria-hidden="true"></span> memfold</a>
+    <nav aria-label="Primary">
+      <ul class="menu">
+        <li>
+          <button type="button" aria-haspopup="true" aria-expanded="false">Product <i class="caret" aria-hidden="true"></i></button>
+          <div class="submenu" role="menu">
+            <a role="menuitem" href="#what">What it is <span>One canonical store for rules and memory</span></a>
+            <a role="menuitem" href="#problem">The problem <span>Fragmentation across tool file formats</span></a>
+            <a role="menuitem" href="#how">How it works <span>The record, the resolver, three surfaces</span></a>
+          </div>
+        </li>
+        <li>
+          <button type="button" aria-haspopup="true" aria-expanded="false">Surfaces <i class="caret" aria-hidden="true"></i></button>
+          <div class="submenu" role="menu">
+            <a role="menuitem" href="#compile">Compile to files <span>Write every tool's native rules file</span></a>
+            <a role="menuitem" href="#mcp">MCP server <span>Search and write memory live</span></a>
+            <a role="menuitem" href="#daemon">Daemon and SDK <span>Local REST plus the TypeScript SDK</span></a>
+          </div>
+        </li>
+        <li>
+          <button type="button" aria-haspopup="true" aria-expanded="false">Developers <i class="caret" aria-hidden="true"></i></button>
+          <div class="submenu" role="menu">
+            <a role="menuitem" href="docs/sdk.md">SDK <span>Embedded and remote, framework adapters</span></a>
+            <a role="menuitem" href="docs/cli.md">CLI <span>The memfold command surface</span></a>
+            <a role="menuitem" href="docs/adapters.md">Adapters <span>The per-tool compile matrix</span></a>
+            <a role="menuitem" href="spec/protocol.md">Specification <span>The normative protocol and schema</span></a>
+          </div>
+        </li>
+        <li>
+          <button type="button" aria-haspopup="true" aria-expanded="false">Docs <i class="caret" aria-hidden="true"></i></button>
+          <div class="submenu" role="menu">
+            <a role="menuitem" href="docs/getting-started.md">Getting started <span>From empty repo to live memory</span></a>
+            <a role="menuitem" href="docs/concepts.md">Concepts <span>Scopes, precedence, merge, decay</span></a>
+            <a role="menuitem" href="docs/faq.md">FAQ <span>Precedence, secrets, portability</span></a>
+          </div>
+        </li>
+      </ul>
+    </nav>
+    <span class="spacer"></span>
+    <button type="button" id="theme-toggle" class="icon-btn" aria-pressed="false" aria-label="Toggle dark mode" title="Toggle theme"><span id="theme-icon" aria-hidden="true">☾</span></button>
+    <a class="btn" href="https://github.com/engram-hq/memfold">GitHub</a>
+  </div>
+</header>
+
+<a id="top"></a>
+<main class="wrap">
+  <section class="hero" id="what">
+    <div>
+      <span class="eyebrow">Universal memory for AI coding tools</span>
+      <h1 style="margin-top:12px;">One memory for every AI coding tool and agent framework</h1>
+      <p class="sub">Write a rule or a fact once. memfold keeps it in a single versioned, local-first store, then compiles it into every tool's native file, serves it live over MCP and syncs it through a local daemon.</p>
+      <div class="cta">
+        <a class="btn primary" href="docs/getting-started.md">Get started</a>
+        <a class="btn" href="#how">See how it works</a>
+      </div>
+      <div class="tags">
+        <span class="tag"><b>1</b> canonical store</span>
+        <span class="tag"><b>8</b> tool adapters</span>
+        <span class="tag"><b>5</b> MCP tools</span>
+        <span class="tag">MCP + REST + files</span>
+      </div>
+      <p class="note">In active development. The TypeScript packages are built and tested; the CLI and the Python, Go and Rust clients are in progress.</p>
+    </div>
+    <div class="diagram" aria-hidden="true">
+      <div class="record">
+        <div class="rh"><span class="pill">convention</span> scope: project</div>
+        <div class="body">API errors return { error: { code, message } };<br>never leak stack traces.</div>
+      </div>
+      <div class="fan">↓ compile ↓</div>
+      <div class="files">
+        <div class="file"><span class="g"></span> CLAUDE.md</div>
+        <div class="file"><span class="g"></span> AGENTS.md</div>
+        <div class="file"><span class="g"></span> .cursor/rules</div>
+        <div class="file"><span class="g"></span> copilot-instructions</div>
+        <div class="file"><span class="g"></span> GEMINI.md</div>
+        <div class="file"><span class="g"></span> CONVENTIONS.md</div>
+      </div>
+    </div>
+  </section>
+  <section id="problem">
+    <span class="eyebrow">The problem</span>
+    <h2 style="margin-top:8px;">Rules and memory are scattered across a moving target of file formats</h2>
+    <p class="lede">One 2026 survey counted <span class="num">21</span> instruction-file paths across <span class="num">18</span> tool families, and only <span class="num">7</span> of the 18 publish any rule for which file wins when several apply. The pain that grows out of that is documented, not anecdotal.</p>
+    <div class="grid g3">
+      <div class="card">
+        <div class="k">Duplication and drift</div>
+        <p>The same facts get copied into CLAUDE.md, AGENTS.md and .cursor/rules. A June 2026 study measured stale code references in <span class="num">23%</span> of a 356-repo sample and named it context rot.</p>
+      </div>
+      <div class="card">
+        <div class="k">Secrets leak in</div>
+        <p>Rules files are meant to be committed, so they are the wrong place for a credential. A population-scale scan found over <span class="num">1,230</span> hardcoded keys and tokens across AI instruction files in public repos.</p>
+      </div>
+      <div class="card">
+        <div class="k">Memory does not follow you</div>
+        <p>Memory is siloed by design. Switch tools or machines and the agent starts blank, with no versioning, no provenance and no merge story for conflicting rules.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="how">
+    <span class="eyebrow">How it works</span>
+    <h2 style="margin-top:8px;">One record, a defined winner, three ways out</h2>
+    <p class="lede">The canonical unit is the Memory Record: a typed, scoped item stored as YAML frontmatter plus a markdown body in a git-diffable directory. A resolver applies explicit precedence, so the winning layer is known instead of arbitrary.</p>
+    <div class="grid g3">
+      <div class="card">
+        <div class="k">Scoped and merged</div>
+        <p>Four scopes from global to session, most specific wins. A hybrid logical clock drives deterministic last-writer-wins merge across machines with no central lock.</p>
+      </div>
+      <div class="card">
+        <div class="k">Ranked and versioned</div>
+        <p>Hybrid retrieval fuses keyword and vector search. Salience and decay rank results. Deletes are tombstones, so every memory has a git-style history and a rollback.</p>
+      </div>
+      <div class="card">
+        <div class="k">Secret-gated</div>
+        <p>Every write runs a pre-write secret scan and refuses to persist a detected credential. The compiler runs the scan again before it touches a file a tool will commit.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="compile">
+    <span class="eyebrow">Surface 1 of 3</span>
+    <h2 style="margin-top:8px;">Compile the store out to every tool's native file</h2>
+    <p class="lede">memfold ships <span class="num">8</span> adapters and writes each tool's real files. Files a human also edits get a fenced managed block, so hand-written prose survives every recompile.</p>
+    <div class="two">
+      <pre class="code"><span class="c">// detect the tools this repo uses, then write their files</span>
+import { detectInstalled, compileAll, writeCompiled } from '@memfold/adapters'
+
+const adapters = await detectInstalled(root)
+const files = compileAll(records, adapters, root)
+await writeCompiled(files) <span class="c">// merges blocks, blocks secrets</span></pre>
+      <div class="card">
+        <div class="k">Targets</div>
+        <ul>
+          <li>Claude Code (CLAUDE.md, .claude/rules)</li>
+          <li>AGENTS.md, Gemini (GEMINI.md)</li>
+          <li>Cursor (.cursor/rules/*.mdc), Windsurf</li>
+          <li>Copilot (.github/copilot-instructions.md)</li>
+          <li>Cline (.clinerules), Aider (CONVENTIONS.md)</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="mcp">
+    <span class="eyebrow">Surface 2 of 3</span>
+    <h2 style="margin-top:8px;">Serve the same memory live over MCP</h2>
+    <p class="lede">Every read and write is a tool, the one primitive every MCP client implements, so tool-only clients keep the full surface. Point any client at the memfold-mcp binary.</p>
+    <div class="two">
+      <pre class="code"><span class="c">// MCP client config</span>
+{
+  "mcpServers": {
+    "memfold": {
+      "command": "memfold-mcp",
+      "env": { "MEMFOLD_DB": "./.memory/index.db" }
+    }
+  }
+}</pre>
+      <div class="card">
+        <div class="k">Tools</div>
+        <ul>
+          <li>memory_search — ranked hybrid search</li>
+          <li>memory_write — store a record, gated</li>
+          <li>memory_get — fetch one record</li>
+          <li>memory_list — browse and audit</li>
+          <li>memory_forget — tombstone a record</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="daemon">
+    <span class="eyebrow">Surface 3 of 3</span>
+    <h2 style="margin-top:8px;">Sync through a local daemon, or embed the SDK</h2>
+    <p class="lede">A local REST daemon fronts the store and mirrors every write to a git-syncable append-only op-log. The TypeScript SDK gives the same surface embedded or remote, so you can start in-process and move to the daemon without changing call sites.</p>
+    <div class="two">
+      <pre class="code"><span class="c">// embedded, in-process</span>
+import { Memfold } from '@memfold/sdk'
+
+const mem = new Memfold('./.memory/index.db')
+await mem.add({ type: 'fact', scope: 'project',
+  body: 'The build runs on Node 22' })
+const hits = await mem.search('node version')</pre>
+      <div class="card">
+        <div class="k">Also in the SDK</div>
+        <ul>
+          <li>MemfoldClient — the same API over the daemon</li>
+          <li>LangGraph BaseStore adapter</li>
+          <li>Vercel AI SDK chat-message store</li>
+          <li>Loopback bind, bearer-token auth on the daemon</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="packages">
+    <span class="eyebrow">For developers</span>
+    <h2 style="margin-top:8px;">Packages and licensing</h2>
+    <p class="lede">memfold is source-available, licensed by component. The spec and the client packages are Apache-2.0, so anyone can implement the protocol and interoperate. It is not OSI "open source".</p>
+    <table class="tbl">
+      <thead><tr><th>Package</th><th>What it is</th><th>Licence</th></tr></thead>
+      <tbody>
+        <tr><td><code>@memfold/core</code></td><td>Record model, SQLite store, retrieval, HLC merge, secret gate</td><td><span class="lic a">Apache-2.0</span></td></tr>
+        <tr><td><code>@memfold/adapters</code></td><td>Read and compile every tool's native files</td><td><span class="lic a">Apache-2.0</span></td></tr>
+        <tr><td><code>@memfold/mcp</code></td><td>MCP server: tools and optional resources</td><td><span class="lic a">Apache-2.0</span></td></tr>
+        <tr><td><code>@memfold/sdk</code></td><td>TypeScript SDK, embedded and remote, framework adapters</td><td><span class="lic a">Apache-2.0</span></td></tr>
+        <tr><td><code>@memfold/daemon</code></td><td>Local REST daemon and git-backed op-log</td><td><span class="lic">FSL-1.1-ALv2</span></td></tr>
+        <tr><td><code>memfold</code> (CLI)</td><td>Command-line tool over the packages above</td><td><span class="lic">FSL-1.1-ALv2</span></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <div class="band">
+      <h2>Write it once. Read it everywhere.</h2>
+      <p class="lede" style="margin:10px auto 0;max-width:56ch;">Start with the getting-started guide, or read the normative protocol and build your own client.</p>
+      <div class="cta">
+        <a class="btn primary" href="docs/getting-started.md">Get started</a>
+        <a class="btn" href="spec/protocol.md">Read the spec</a>
+        <a class="btn" href="https://github.com/engram-hq/memfold">GitHub</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="fcols">
+      <div>
+        <div class="brand" style="font-size:16px;"><span class="dot" aria-hidden="true"></span> memfold</div>
+        <p style="margin-top:10px;font-size:14px;max-width:34ch;">One common memory for every AI coding tool and agent framework. Source-available.</p>
+      </div>
+      <div>
+        <h4>Product</h4>
+        <a href="#what">What it is</a>
+        <a href="#problem">The problem</a>
+        <a href="#how">How it works</a>
+      </div>
+      <div>
+        <h4>Developers</h4>
+        <a href="docs/getting-started.md">Getting started</a>
+        <a href="docs/sdk.md">SDK</a>
+        <a href="docs/adapters.md">Adapters</a>
+        <a href="spec/protocol.md">Specification</a>
+      </div>
+      <div>
+        <h4>Reference</h4>
+        <a href="docs/mcp.md">MCP</a>
+        <a href="docs/daemon-rest.md">Daemon REST</a>
+        <a href="docs/faq.md">FAQ</a>
+        <a href="https://github.com/engram-hq/memfold">GitHub</a>
+      </div>
+    </div>
+    <p class="fnote">Apache-2.0 for the spec and client packages. FSL-1.1-ALv2 for the daemon and CLI, converting to Apache-2.0 two years after each release. memfold is source-available, not OSI open source.</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var root=document.documentElement, toggle=document.getElementById('theme-toggle'), icon=document.getElementById('theme-icon');
+  function paint(t){ icon.textContent = t==='dark' ? '☀' : '☾'; toggle.setAttribute('aria-pressed', t==='dark'?'true':'false'); }
+  paint(root.getAttribute('data-theme')||'light');
+  toggle.addEventListener('click',function(){
+    var t = root.getAttribute('data-theme')==='dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme',t);
+    try{ localStorage.setItem('theme',t); }catch(e){}
+    paint(t);
+  });
+
+  var items = Array.prototype.slice.call(document.querySelectorAll('.menu > li'));
+  function closeAll(except){
+    items.forEach(function(li){
+      if(li===except) return;
+      li.classList.remove('open');
+      var b=li.querySelector('button'); if(b) b.setAttribute('aria-expanded','false');
+    });
+  }
+  items.forEach(function(li){
+    var btn=li.querySelector('button');
+    btn.addEventListener('click',function(e){
+      e.stopPropagation();
+      var open=li.classList.toggle('open');
+      btn.setAttribute('aria-expanded',open?'true':'false');
+      closeAll(li);
+    });
+    li.addEventListener('keydown',function(e){ if(e.key==='Escape'){ closeAll(); btn.setAttribute('aria-expanded','false'); li.classList.remove('open'); btn.focus(); } });
+    li.querySelectorAll('.submenu a').forEach(function(a){ a.addEventListener('click',function(){ closeAll(); }); });
+    li.addEventListener('focusout',function(e){ if(!li.contains(e.relatedTarget)){ li.classList.remove('open'); btn.setAttribute('aria-expanded','false'); } });
+  });
+  document.addEventListener('click',function(e){ if(!e.target.closest('.menu')) closeAll(); });
+})();
+</script>
+</body>
+</html>
