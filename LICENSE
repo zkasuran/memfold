@@ -1,0 +1,30 @@
+# memfold licensing
+
+memfold is source-available and licensed by component. Each package also declares
+its license in its `package.json` and ships its own `LICENSE` file.
+
+## Apache-2.0 (permissive) — implement and build on these freely
+
+- `spec/` — the memfold protocol and the memory-record schema
+- `conformance/` — the conformance test suite and vectors
+- `packages/core` (`@memfold/core`) — record model, store, retrieval
+- `packages/adapters` (`@memfold/adapters`) — per-tool file read/write and compiler
+- `packages/mcp` (`@memfold/mcp`) — the MCP server
+- `packages/sdk` (`@memfold/sdk`) — the TypeScript SDK and framework adapters
+
+Full text: `LICENSES/Apache-2.0.txt`. SPDX-License-Identifier: Apache-2.0
+
+## FSL-1.1-ALv2 (Functional Source License, Apache-2.0 future) — the server tier
+
+- `packages/daemon` (`@memfold/daemon`) — the local/hostable REST daemon and sync
+- `packages/cli` (`memfold`) — the command-line tool
+
+This permits any use except a Competing Use (standing up a product or service that
+substitutes for memfold), and it converts to Apache-2.0 two years after each release.
+Full text: `LICENSES/FSL-1.1-ALv2.txt`. SPDX-License-Identifier: FSL-1.1-ALv2
+
+## Note
+
+FSL is not an OSI-approved "open source" license, so memfold is described as
+"source-available" (or "Fair Source"), not "open source". The specification and the
+client SDKs are Apache-2.0 so anyone can implement the protocol and interoperate.
