@@ -1,0 +1,15 @@
+{
+  "id": "TS41RTX0ESJ1QGN3M264WVN22Y",
+  "rev": "R4FE5PKBPKYB3MCKR5KRXT0J9Y",
+  "schema_version": 2,
+  "type": "fact",
+  "scope": "project",
+  "scope_path": ".",
+  "body": "schema_version must be the literal 1; a 2 signals an incompatible record and must fail.",
+  "content_hash": "sha256:6c1d890d55121e794e4b4e1e6791c2fba8ad1be00e745efd84455c324beba81d",
+  "provenance": { "source": "user" },
+  "created_at": "2026-09-20T10:00:00Z",
+  "updated_at": "2026-09-20T10:00:00Z",
+  "status": "active",
+  "hlc": "001758362400000:000000:laptop-a"
+}

@@ -1,0 +1,23 @@
+{
+  "id": "C6ED3NV8JGA12QKE5YKZ99E5RT",
+  "rev": "7RZ5ACTQFMMW26VHC0DJE88H5B",
+  "schema_version": 1,
+  "type": "convention",
+  "scope": "dir",
+  "scope_path": "packages/api",
+  "title": "API error shape",
+  "body": "All HTTP handlers under packages/api return errors as { error: { code, message } } with an appropriate status. Never leak stack traces to clients.",
+  "summary": "API errors use { error: { code, message } }; no stack traces to clients.",
+  "tags": ["api", "errors"],
+  "dedup_key": "conv:api-error-shape",
+  "content_hash": "sha256:b50d9e8fb582cf2b436b5c57126bc93457651688f42993ce0e53d9baa08bf2cc",
+  "provenance": { "source": "user", "tool": "codex" },
+  "salience": 0.7,
+  "confidence": 1,
+  "decay": { "pinned": true },
+  "created_at": "2026-09-17T09:00:00Z",
+  "updated_at": "2026-09-21T11:45:00Z",
+  "status": "active",
+  "hlc": "001758452700000:000001:laptop-b",
+  "sensitivity": "public"
+}

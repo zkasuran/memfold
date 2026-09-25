@@ -1,0 +1,22 @@
+{
+  "id": "R4FE5PKBPKYB3MCKR5KRXT0J9Y",
+  "rev": "2QK7MZ2V1777K6FPAJXXX4VS17",
+  "schema_version": 1,
+  "type": "preference",
+  "scope": "global",
+  "scope_path": null,
+  "title": "Indentation",
+  "body": "Use tabs for indentation, width 4. Never mix tabs and spaces in the same file.",
+  "summary": "Indent with tabs, width 4.",
+  "tags": ["style"],
+  "dedup_key": "pref:indent-style",
+  "content_hash": "sha256:e55153827c2ad0c10af86e4387ae4deaa570fc3ac788ae756511afdcde76a2fe",
+  "provenance": { "source": "user" },
+  "salience": 0.6,
+  "confidence": 1,
+  "created_at": "2026-09-18T08:30:00Z",
+  "updated_at": "2026-09-18T08:30:00Z",
+  "status": "active",
+  "hlc": "001758184200000:000000:laptop-a",
+  "sensitivity": "public"
+}

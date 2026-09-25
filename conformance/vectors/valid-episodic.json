@@ -1,0 +1,28 @@
+{
+  "id": "PGFMBH3RNYHW6T745RCK4HF8WM",
+  "rev": "607RX0K5RZRRJQ321AKCMF7DMR",
+  "schema_version": 1,
+  "type": "episodic",
+  "scope": "session",
+  "scope_path": null,
+  "title": "Flaky auth suite triage",
+  "body": "On 2026-09-20 the auth suite failed intermittently because the test clock was not frozen. Freezing time with the fake-timers helper fixed it.",
+  "summary": "Auth suite flakiness was an unfrozen test clock; fixed with fake timers.",
+  "tags": ["testing", "flaky"],
+  "content_hash": "sha256:30c3c37b5eba341dbc32e6b3e208ab205cc9623d132d8b6a75f804f3a2d101bf",
+  "provenance": {
+    "source": "agent",
+    "tool": "claude-code",
+    "session_id": "DA7TB3EYW36S7KHQJDANW3M5FD"
+  },
+  "salience": 0.3,
+  "confidence": 0.8,
+  "decay": { "half_life_days": 30, "pinned": false },
+  "created_at": "2026-09-20T16:40:00Z",
+  "updated_at": "2026-09-20T16:40:00Z",
+  "last_accessed_at": "2026-09-22T09:05:00Z",
+  "access_count": 2,
+  "status": "active",
+  "hlc": "001758386400000:000000:laptop-a",
+  "sensitivity": "public"
+}

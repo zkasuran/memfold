@@ -11,10 +11,12 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@hono/node-server": "^1.13.7",
     "@memfold/adapters": "workspace:*",
     "@memfold/core": "workspace:*",
     "@memfold/daemon": "workspace:*",
     "@memfold/mcp": "workspace:*",
+    "@modelcontextprotocol/sdk": "^1.30.0",
     "commander": "^12.1.0",
     "picocolors": "^1.1.1"
   },

@@ -1,0 +1,15 @@
+{
+  "id": "Q9W4BEK44SJMF5XJTJCNB4W94X",
+  "rev": "ZWAZGQPXGN82RY9Q5D5TCA9WNF",
+  "schema_version": 1,
+  "type": "reminder",
+  "scope": "project",
+  "scope_path": ".",
+  "body": "The 'type' value 'reminder' is not in the enum, so this must fail.",
+  "content_hash": "sha256:6c1d890d55121e794e4b4e1e6791c2fba8ad1be00e745efd84455c324beba81d",
+  "provenance": { "source": "user" },
+  "created_at": "2026-09-20T10:00:00Z",
+  "updated_at": "2026-09-20T10:00:00Z",
+  "status": "active",
+  "hlc": "001758362400000:000000:laptop-a"
+}

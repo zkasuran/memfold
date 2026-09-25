@@ -1,0 +1,71 @@
+{
+  "license": "Apache-2.0",
+  "description": "Conformance vectors for the memfold Memory Record. Each entry is validated with MemoryRecordSchema.safeParse from @memfold/core. 'valid' entries must parse and must round-trip through serializeRecord -> parseRecord to an equal record; 'invalid' entries must fail to parse. Paths are relative to this file's directory.",
+  "vectors": [
+    {
+      "file": "valid-fact.json",
+      "expect": "valid",
+      "reason": "type=fact, scope=project; a durable factual statement about the codebase."
+    },
+    {
+      "file": "valid-preference.json",
+      "expect": "valid",
+      "reason": "type=preference, scope=global; a cross-project user preference, scope_path null."
+    },
+    {
+      "file": "valid-decision.json",
+      "expect": "valid",
+      "reason": "type=decision, scope=project; an architectural decision with provenance, links and confidence < 1."
+    },
+    {
+      "file": "valid-convention.json",
+      "expect": "valid",
+      "reason": "type=convention, scope=dir; a directory-scoped rule with scope_path and decay.pinned=true."
+    },
+    {
+      "file": "valid-episodic.json",
+      "expect": "valid",
+      "reason": "type=episodic, scope=session; a recall-only episode with decay.half_life_days and access stats."
+    },
+    {
+      "file": "valid-task.json",
+      "expect": "valid",
+      "reason": "type=task, scope=project; an open task with a decay.ttl_at hard expiry."
+    },
+    {
+      "file": "valid-entity.json",
+      "expect": "valid",
+      "reason": "type=entity, scope=global; a person entity produced by consolidation."
+    },
+    {
+      "file": "valid-minimal.json",
+      "expect": "valid",
+      "reason": "Only the fields @memfold/core requires (id, rev, type, scope, body, content_hash, provenance, created_at, updated_at, hlc); exercises schema defaults and still round-trips."
+    },
+    {
+      "file": "invalid-missing-id.json",
+      "expect": "invalid",
+      "reason": "Missing the required 'id' field."
+    },
+    {
+      "file": "invalid-bad-scope.json",
+      "expect": "invalid",
+      "reason": "Bad enum: scope='repository' is not one of global|project|dir|session."
+    },
+    {
+      "file": "invalid-salience-range.json",
+      "expect": "invalid",
+      "reason": "Out of range: salience=1.5 exceeds the maximum of 1."
+    },
+    {
+      "file": "invalid-bad-type.json",
+      "expect": "invalid",
+      "reason": "Bad enum: type='reminder' is not a known memory type."
+    },
+    {
+      "file": "invalid-schema-version.json",
+      "expect": "invalid",
+      "reason": "schema_version=2 is not the required literal 1."
+    }
+  ]
+}

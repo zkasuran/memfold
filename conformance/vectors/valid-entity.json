@@ -1,0 +1,23 @@
+{
+  "id": "XNTR9TM6MGRD3GTSXM73AVG6E1",
+  "rev": "NCFWT66BSRRH5EB97K66BGF4V4",
+  "schema_version": 1,
+  "type": "entity",
+  "scope": "global",
+  "scope_path": null,
+  "title": "asuran",
+  "body": "asuran is the primary maintainer. Prefers concise PRs, no em dashes in prose, and tabs over spaces.",
+  "summary": "asuran: primary maintainer; concise PRs; tabs.",
+  "tags": ["person", "maintainer"],
+  "dedup_key": "entity:asuran",
+  "content_hash": "sha256:6a17b157b097b1677b7dbb134fbbb2eae118fff047593d7f1ecf99b68d5fc3cf",
+  "provenance": { "source": "consolidation" },
+  "salience": 0.7,
+  "confidence": 1,
+  "created_at": "2026-09-15T07:20:00Z",
+  "updated_at": "2026-09-23T18:10:00Z",
+  "status": "active",
+  "links": ["R4FE5PKBPKYB3MCKR5KRXT0J9Y"],
+  "hlc": "001758651000000:000000:consolidator",
+  "sensitivity": "public"
+}

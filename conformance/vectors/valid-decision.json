@@ -1,0 +1,27 @@
+{
+  "id": "A9VDJ7KKS8WAFJVDSNG06HYHRR",
+  "rev": "38EYER0CCPBEY3504YK85E6PT4",
+  "schema_version": 1,
+  "type": "decision",
+  "scope": "project",
+  "scope_path": ".",
+  "title": "Event bus choice",
+  "body": "We chose NATS over Kafka for the event bus. Rationale: lower operational overhead and the team already runs NATS in another service. Revisit if throughput exceeds 100k msgs/sec.",
+  "summary": "Event bus is NATS, chosen over Kafka for lower ops overhead.",
+  "tags": ["architecture", "decision"],
+  "content_hash": "sha256:560f307c462f0e61a85a8400ea53f4dc5096b56ab29ecd1c1ae3d277ee27ed77",
+  "provenance": {
+    "source": "agent",
+    "tool": "cursor",
+    "model": "claude-opus-4-8",
+    "cite": "adr-0007"
+  },
+  "salience": 0.9,
+  "confidence": 0.9,
+  "created_at": "2026-09-19T14:12:00Z",
+  "updated_at": "2026-09-19T14:12:00Z",
+  "status": "active",
+  "links": ["6TVAMXDCM5RTQRV8BHH3PF0P8H"],
+  "hlc": "001758290000000:000000:ci-runner",
+  "sensitivity": "internal"
+}
