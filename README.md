@@ -7,8 +7,8 @@ One common memory for every AI coding tool and agent framework.
 
 You keep your project's rules and decisions in one place. memfold stores them in a local
 database and projects them into whatever AI coding tool you happen to be using: it compiles
-them into each tool's native rules file, serves them live over an MCP server, and exposes them
-through a local REST daemon with SDKs for four languages. Write a fact once, and Claude Code,
+them into each tool's native rules file, serves them live over an MCP server and exposes them
+through a local REST daemon with SDKs for four languages. Write a fact once and Claude Code,
 Cursor, Copilot, Codex, Gemini, Cline and Aider all read the same thing.
 
 ## The problem
@@ -20,7 +20,7 @@ list of tools read `AGENTS.md`. Cursor reads `.cursor/rules/*.mdc`, Copilot read
 
 So you end up copying the same rules into each file by hand. They drift apart the moment one is
 edited. Nothing carries across when you switch tools. And because these files get committed,
-secrets pasted into them leak into git history. memfold removes the copying, the drift, and the
+secrets pasted into them leak into git history. memfold removes the copying, the drift and the
 leaks by keeping one source of truth and generating the rest.
 
 ## Try it
@@ -109,7 +109,7 @@ One store, three ways out.
    blocks so hand-written text is left alone.
 2. **MCP.** `memfold mcp` serves the same memory to any Model Context Protocol client, as tools.
 3. **Daemon.** `memfold serve` runs a local REST API. A git-friendly append-only op-log lets two
-   machines merge. The SDKs wrap this API, or embed the store directly.
+   machines merge. The SDKs wrap this API or embed the store directly.
 
 ## Install
 
@@ -164,10 +164,10 @@ tool files. `episodic` and `task` are recall-only by default. The full JSON Sche
 - **Retrieval.** Search runs two legs, FTS5 keyword ranking (BM25) and `sqlite-vec` vector search,
   and fuses them with reciprocal rank fusion, then reweights by salience and recency.
 - **Merge.** Every record carries a hybrid logical clock. Scalars merge last-writer-wins, `tags`
-  and `links` are OR-sets (concurrent adds union), deletes are tombstones, and identical bodies
+  and `links` are OR-sets (concurrent adds union), deletes are tombstones and identical bodies
   dedup by `content_hash`. Two machines converge without a central server.
 - **Secret gate.** Writes are scanned first. `memfold add "key AKIA..."` is refused before it
-  touches the store, and `compile` refuses to render a secret into a file that would be committed.
+  touches the store. `compile` refuses to render a secret into a file that would be committed.
 
 ## CLI
 
@@ -183,7 +183,7 @@ tool files. `episodic` and `task` are recall-only by default. The full JSON Sche
 | `memfold sync` | `import` then `compile` back out to detected tools |
 | `memfold serve` | Start the REST daemon. `--port`, `--host`, `--token` |
 | `memfold mcp` | Start the MCP server over stdio |
-| `memfold doctor` | Store stats, detected tools, and a secret scan |
+| `memfold doctor` | Store stats, detected tools and a secret scan |
 
 Use `--global` on `init`, `add` and friends to target `~/.memfold` instead of the project store.
 
@@ -233,7 +233,7 @@ without auth unless you pass `--token`, in which case every route except `/healt
 | `GET` | `/health` | `{ status, vectorEnabled, count }` |
 | `POST` | `/memories` | Create a record from `{ type, scope, body, ... }` |
 | `GET` | `/memories` | List, filters `scope`, `scopePath`, `type`, `status` |
-| `GET` | `/memories/:id` | Fetch one, or 404 |
+| `GET` | `/memories/:id` | Fetch one or a 404 |
 | `PATCH` | `/memories/:id` | Revise a record |
 | `DELETE` | `/memories/:id` | Tombstone a record |
 | `POST` | `/search` | `{ query, limit?, scope?, scopePath?, types? }` |
@@ -247,8 +247,8 @@ curl -s http://127.0.0.1:7077/search \
 
 ## SDKs
 
-**TypeScript** (`@memfold/sdk`). Embed the store in-process, or talk to the daemon with
-`MemfoldClient`. Both satisfy the same interface, and the LangGraph and Vercel AI adapters accept
+**TypeScript** (`@memfold/sdk`). Embed the store in-process or talk to the daemon with
+`MemfoldClient`. Both satisfy the same interface, so the LangGraph and Vercel AI adapters accept
 either.
 
 ```ts
@@ -321,11 +321,11 @@ memfold/
 
 ## How it compares
 
-Two kinds of tools exist today, and neither does the whole job. Rules-sync tools generate a bunch
+Two kinds of tools exist today and neither does the whole job. Rules-sync tools generate a bunch
 of instruction files from one source, but they are one-shot and hold no memory. Agent-memory tools
 store what an agent learned, but they live in one silo and do not unify the rules files each tool
 reads. memfold does both at once: one canonical store, compiled into every tool's native file,
-served live to MCP clients, and reachable over REST for agents and scripts.
+served live to MCP clients and reachable over REST for agents and scripts.
 
 ## Development
 
@@ -346,7 +346,7 @@ client 9 plus a doc-test. CI runs all four languages on GitHub Actions. The norm
 
 - More adapters for tools that ship their own memory files (Roo, Kilo, opencode, Amp, Goose, Amazon Q)
 - The secret gate enforced on every store write, not only on compile
-- Publishing `@memfold/*` to npm, `memfold` to PyPI, and the crate and Go module to their registries
+- Publishing `@memfold/*` to npm, `memfold` to PyPI and the crate and Go module to their registries
 
 ## License
 
@@ -360,7 +360,7 @@ after each release. See [`LICENSE`](LICENSE).
 ## Acknowledgements
 
 memfold builds on two shared conventions rather than replacing them. It compiles to and reads
-`AGENTS.md`, the cross-tool instruction file, and it speaks the Model Context Protocol so any MCP
+`AGENTS.md`, the cross-tool instruction file. It also speaks the Model Context Protocol so any MCP
 client can use the same memory.
 
 
